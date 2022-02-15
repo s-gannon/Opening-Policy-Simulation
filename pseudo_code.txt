@@ -1,0 +1,172 @@
+function a (integer n)
+{
+    IF n modulo 24 is less than 8
+        then return 1
+    ELSE IF n modulo 24 is less than 16
+        then return 0.2
+    ELSE IF n modulo 24 is less than 20
+        then return 0.3
+    ELSE
+        return 0.4
+}
+function a (integer n, integer array other_values)
+{
+    IF n modulo 24 is less than 8
+        then return item 1 of other_values
+    ELSE IF n modulo 24 is less than 16
+        then return item 2 of other_values
+    ELSE IF n modulo 24 is less than 20
+        then return item 3 of other_values
+    ELSE
+        return item 4 of other_values
+}
+
+function b (integer n)
+{
+    IF n modulo 24 is less than 8
+        then return 0.01
+    ELSE IF n modulo 24 is less than 16
+        then return 0.08
+    ELSE IF n modulo 24 is less than 20
+        then return 0.05
+    ELSE
+        return 0.02
+}
+function b (integer n, integer array other_values)
+{
+    IF n modulo 24 is less than 8
+        then return item 1 of other_values
+    ELSE IF n modulo 24 is less than 16
+        then return item 2 of other_values
+    ELSE IF n modulo 24 is less than 20
+        then return item 3 of other_values
+    ELSE
+        return item 4 of other_values
+}
+
+function f (integer n)
+{
+    IF n is less than 0
+        return 0
+    ELSE
+        return 1
+}
+
+function g (decimal load, decimal N)
+{
+    IF load is greater than N
+        return 1
+    ELSE
+        return load divided by N
+}
+
+function h (integer a, integer b)
+{
+    IF a is equal to b
+        return 1
+    ELSE
+        return 0
+}
+
+function main()
+{
+    declare and initialize integer constant MAX_TIME
+    declare integers P, L, T, and n
+    declare decimals lambda, r, mu
+    declare integer 1D array t (size T)
+    declare decimal 1D arrays N (size L), Ncrt (size L), and R (size MAX_TIME)
+    declare integer 2D arrays c (size P by L) and o (size T by L)
+    declare decimal 3D arrays S (size P by L by MAX_TIME) and I (size P by L by MAX_TIME)
+
+
+    open the current data input file
+    read two integer values from the file and store them in P and L
+    print P and L
+
+    FOR each location (L)
+        read a decimal value from the file and store it in the 1D array N
+        print the decimal value read from the file
+
+    FOR each preference (P) starting at 1
+        read two decimal values from the file and store it in the 3D arrays S and I at [i][0][0] (where i is the current preference)
+        print the decimal values read from the file
+
+    FOR each preference (P) starting at 1
+        FOR each location (L) starting at 1
+            read an integer value from the file and store it in the 2D array c at [i][j] (where i is the current preference and j is the current location)
+            print the integer value read from the file
+
+    read an integer value from the file and store it in T
+    print T
+
+    FOR each time range (T) starting at 1
+        FOR each location (L) starting at 1
+            read an integer value from the file and store it in the 2D array o at [i][j] (where i is the current time range and j is the current location)
+            print the integer value read from the file
+
+    read three decimal values and store them in lambda, r, and mu
+    print lambda, r, and mu
+
+    close the file
+
+    open the data output file
+
+    set n equal to 0
+    set the first element of the 1D array R to 0
+    WHILE n is less than or equal to MAX_TIME
+    {
+        FOR each location (L) set to variable j
+            set array Ncrt at index j to 0
+            FOR each preference (P) starting at 1 set to variable i
+                set aux equal to r times the value at array I at [i][j][n]
+                set array I at [i][j][n] equal to the current value minus aux
+                set array R at index n equal to the current value plus aux
+                set Ncrt at index j to the current value plus I[i][j][n], I[i][j][n - 1], I[i][j][n - 2] (so long as those values exist)
+
+        FOR each location (L) set to variable j
+            FOR each preference (P) starting at 1 set to variable i
+                set aux equal to lambda multiplied by the result of function g(Ncrt[j], N[j]) multiplied by the value at S[i][j][n]
+                set array S at [i][j][n] equal to the current value minus aux
+                set array I at [i][j][n] equal to the current value plus aux
+
+        FOR each location (L) set to variable j
+            set Scounter equal to 0
+            set Icounter equal to 0
+            declare a character array called fmt_str with 30 items and set it equal to ""
+            FOR each location (P) starting at 1 set to variable i
+                set Scounter equal to the current value plus the value at array S at index [i][j][n]
+                set Icounter equal to the current value plus the value at array I at index [i][j][n]
+            call the sprintf function with arguments fmt_str, "%3.0f , %3.0f||", roundf(Scounter), roundf(Icounter)
+            pass fmt_str to outfile (i.e. append it to the end of the text file)
+
+        FOR each preference (P) starting at 1 set to variable i
+            set k equal to 1
+            WHILE NOT t[k - 1] is less than or equal to n modulo 24 AND n modulo 24 is less than or equal to t[k]
+                increment k by 1
+            set l equal to 0
+            set array o at index [k][c[i][l]] equal to 0
+            WHILE o[k][c[i][l]] is equal to 0 AND l is less than or equal to L
+                increment l by 1
+            IF l is greater than L
+                set nothing_open to 0
+            ELSE
+                set nothing_open to 1
+
+            set Saux equal to 0
+            set Iaux equal to 0
+            FOR each location (L) starting at 1 set to variable j
+                set Saux equal to the current value plus the value at array S at index [i][j][n]
+                set Iaux equal to the current value plus the value at array I at index [i][j][n]
+
+            set the array S at index [i][0][n+1] equal to the value at array S at index [i][0][n] minus nothing_open times the function b with argument (n) times the value at array S at index [i][0][n] plus the function a with argument (n) times Saux
+            set the array I at index [i][0][n+1] equal to the value at array I at index [i][0][n] minus nothing_open times the function b with argument (n) times the value at array I at index [i][0][n] plus the function a with argument (n) times Iaux
+            FOR each location (L) starting at 1 set to variable j
+                set the array S at index [i][0][n+1] equal to the value at array S at index [i][0][n] minus the function a with argument (n) times the value at array S at index [i][j][n] plus nothing_open times the function h with arguments (j, c[i][l]) times the function b with argument (n) times the value at array S at index [i][0][n]
+                set the array I at index [i][0][n+1] equal to the value at array I at index [i][0][n] minus the function a with argument (n) times the value at array I at index [i][j][n] plus nothing_open times the function h with arguments (j, c[i][l]) times the function b with argument (n) times the value at array I at index [i][0][n]
+
+
+        set array R at index n + 1 equal to the value at R at index n minus mu times the value at R at index n
+        increment n by 1
+    }
+    close the data output file
+}
