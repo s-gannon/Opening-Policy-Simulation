@@ -8,11 +8,9 @@ OBJS = $(SRCS:.cpp=.o)
 all: $(TARGET)
 
 op_sim: $(OBJS)
-	#$(CXX) -o $@ $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
 %.o: %.cpp
-	#$(CXX) -c $< -o $@
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:

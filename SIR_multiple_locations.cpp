@@ -1,14 +1,10 @@
-#include <iostream>
-#include <fstream>
-#include <cstdio>
 #include <cmath>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+#include <exception>
 
-using std::cout;
-using std::cin;
-using std::ifstream;
-using std::ofstream;
-using std::endl;
-
+using namespace std;
 // Ideas for improvement: the transfer rates between locations should be dynamic and adjusted if there is a time interval with
 // no openings (i.e. more individuals will go to the store at other times when the stores are open
 
@@ -81,8 +77,9 @@ int h(int a, int b)
 	return (a == b);
 }
 
-int main()
-{   //declaration of variables to be taken from the input data file
+int main(int argc, char* argv[])
+{
+	//declaration of variables to be taken from the input data file
     int P,L; //number of locations L and preferences P
 	float N[10]; //N[i] is saturation viral load at location i
 	float S[10][10][1000],I[10][10][1000];// S[i][j][n], I[i][j][n] is number of  susceptible/infected of preference i, at location j at time n
@@ -92,32 +89,56 @@ int main()
     int o[10][10]; //opening policies: each row corresponds to one policy and each entry is either 0 or 1 indicating the location open or closed
                    // o[i][j]=1 will mean: in the time range indicated by t[i], location j is open. Thus the "o" matrix has T rows and L columns
 
-	float lambda, r, mu; //maximum infection rate, removal rate and disease mortality
+	float lambda, r, mu; //maximum infection rate, removal rate, and disease mortality
 
 	//variables outside of input data file
-	float R[1000]; //R[n] removed individuals at time n
-	float Ncrt[10]; // Ncrt[j] Current viral  load at location j
+	float R[1000]; 		//R[n] ; Removed individuals at time n
+	float Ncrt[10]; 	//Ncrt[j] ; Current viral load at location j
 	int n,i,j,k,l,nothing_open;
-	float Scounter,Icounter;//  Counts the susceptible and infected at the current location
+	float Scounter,Icounter;	//Counts the susceptible and infected at the current location
     float aux;
-    float Saux,Iaux; // Counts the susceptible and infected at time n that will return home from locations 1,2,..,L
+    float Saux,Iaux; 	//Counts the susceptible and infected at time n that will return home from locations 1,2,..,L
 
-
-//  reading data from the input file and displaying to console for verification. Console display can be removed later
+	//Reading data from the input file and displaying to console for verification. Console display can be removed later
 	ifstream infile;
-    infile.open("Input_Data_6.txt");
+	try
+	{
+		infile.open("/input_files/" + (string)argv[1] + ".txt");
+	}
+	catch (exception& e)
+	{
+		string user_input;
+		bool input_received = false;
+		while (!input_received)
+		{
+			try
+			{
+				cout << "Please enter the name of the input file (omit the .txt extension): ";
+				cin >> user_input;
+				infile.open("/input_files/" + user_input + ".txt");
+				input_received = true;
+			}
+			catch (exception& j)
+			{
+				cout << "Error: check to make sure the input is in the input_files folder and try again." << endl;
+				cout << j.what() << endl;
+				input_received = false;
+			}
+			//cout << e.what() << "\n";
+		}
+	}
 
 	infile>>P>>L;
 	cout<<P<<" "<<L<<endl;
 
-    for(j=0;j<=L;j++)	//out of bounds?
+    for(j=0;j<=L;j++)
 	{
 		infile>>N[j];
 		cout<<N[j]<<" ";
 	}
 	cout<<endl;
 
-	for(i=1;i<=P;i++)	//also out of bounds?
+	for(i=1;i<=P;i++)
 	{
 		infile>>S[i][0][0]>>I[i][0][0];
 		cout<<S[i][0][0]<<" "<<I[i][0][0]<<endl;
@@ -173,14 +194,14 @@ int main()
   	ofstream outfile;
   	outfile.open("/output_files/Output_Data_6.txt");
 
-	n=0;//initialization time counter
-    R[0]=0;//initialization recovered individuals
+	n=0;		//initialization time counter
+    R[0]=0;		//initialization recovered individuals
 	while(n<=900)
 	{
 		//calculation of the viral load at location j and the recovery step
 		for(j=0;j<=L;j++)
      	{
-			Ncrt[j]=0;	// LEFT OFF HERE
+			Ncrt[j]=0;
 			for(i=1;i<=P;i++)
 			{
 				aux=r*I[i][j][n];
@@ -210,10 +231,9 @@ int main()
 				Scounter += S[i][j][n];
 				Icounter += I[i][j][n];
 			}
-			sprintf(fmt_str, "%3.0f , %3.0f||", roundf(Scounter), roundf(Icounter));
-			std::string temp = fmt_str;
+			sprintf(fmt_str, "%4.0f , %4.0f||", roundf(Scounter), roundf(Icounter));
+			string temp = fmt_str;
             outfile << temp;
-			//outfile<<round(Scounter)<<" , "<<round(Icounter)<<"||";
 		}
 
 		outfile<<endl;
