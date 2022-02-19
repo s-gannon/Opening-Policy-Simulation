@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <exception>
+#include <filesystem>
 
 using namespace std;
 // Ideas for improvement: the transfer rates between locations should be dynamic and adjusted if there is a time interval with
@@ -100,33 +101,37 @@ int main(int argc, char* argv[])
     float Saux,Iaux; 	//Counts the susceptible and infected at time n that will return home from locations 1,2,..,L
 
 	//Reading data from the input file and displaying to console for verification. Console display can be removed later
+	if (argc < 2){
+		cout << "Error: command must be run as:\nop_sim <input file name> or op_sim <input file name> <output file name>" << endl;
+		return 0;
+	}
 	ifstream infile;
-	try
-	{
-		infile.open("/input_files/" + (string)argv[1] + ".txt");
-	}
-	catch (exception& e)
-	{
-		string user_input;
-		bool input_received = false;
-		while (!input_received)
-		{
-			try
-			{
-				cout << "Please enter the name of the input file (omit the .txt extension): ";
-				cin >> user_input;
-				infile.open("/input_files/" + user_input + ".txt");
-				input_received = true;
-			}
-			catch (exception& j)
-			{
-				cout << "Error: check to make sure the input is in the input_files folder and try again." << endl;
-				cout << j.what() << endl;
-				input_received = false;
-			}
-			//cout << e.what() << "\n";
-		}
-	}
+	infile.open("input_files/" + (string)argv[1] + ".txt");
+	// if (argc > 1)	//if there's more than one arg (aka more than the name of the program)
+	// {
+	// }
+	// else
+	// {
+	// 	string user_input;
+	// 	bool input_received = false;
+	// 	while (!input_received)
+	// 	{
+	// 		try
+	// 		{
+	// 			cout << "Please enter the name of the input file (omit the .txt extension): ";
+	// 			cin >> user_input;
+	// 			infile.open("input_files/" + user_input + ".txt");
+	// 			input_received = true;
+	// 		}
+	// 		catch (exception& j)
+	// 		{
+	// 			cout << "Error: check to make sure the input is in the input_files folder and try again." << endl;
+	// 			cout << j.what() << endl;
+	// 			input_received = false;
+	// 		}
+	// 		//cout << e.what() << "\n";
+	// 	}
+	// }
 
 	infile>>P>>L;
 	cout<<P<<" "<<L<<endl;
@@ -192,7 +197,11 @@ int main(int argc, char* argv[])
 
 	// opening Output data file for writing
   	ofstream outfile;
-  	outfile.open("/output_files/Output_Data_6.txt");
+	if (argc == 3)
+		outfile.open("output_files/" + (string)argv[2] + ".txt"); //use for possible command line input
+	else
+		outfile.open("output_files/output.txt"); //use for possible command line input
+
 
 	n=0;		//initialization time counter
     R[0]=0;		//initialization recovered individuals
