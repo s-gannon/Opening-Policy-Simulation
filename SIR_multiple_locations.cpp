@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <conio.h>
 #include <cstdio>
 #include <cmath>
 
@@ -172,7 +171,7 @@ int main()
 
 	// opening Output data file for writing
   	ofstream outfile;
-  	outfile.open("Output_Data_6.txt");
+  	outfile.open("/output_files/Output_Data_6.txt");
 
 	n=0;//initialization time counter
     R[0]=0;//initialization recovered individuals
