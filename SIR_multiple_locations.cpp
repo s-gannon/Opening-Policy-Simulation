@@ -63,7 +63,7 @@ float b(int n, int other_vals[4])
 //this function returns 0 if the time becomes negative and 1 if the time is positive and it is used to prevent negative times
 int f(int n)
 {
-	return !(n < 0);
+	return n >= 0;	//exact same as !(n < 0)
 }
 
 //this function returns  viral load fraction of saturated level N or 1 if  viral load exceeds  N
