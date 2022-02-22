@@ -107,31 +107,6 @@ int main(int argc, char* argv[])
 	}
 	ifstream infile;
 	infile.open("input_files/" + (string)argv[1] + ".txt");
-	// if (argc > 1)	//if there's more than one arg (aka more than the name of the program)
-	// {
-	// }
-	// else
-	// {
-	// 	string user_input;
-	// 	bool input_received = false;
-	// 	while (!input_received)
-	// 	{
-	// 		try
-	// 		{
-	// 			cout << "Please enter the name of the input file (omit the .txt extension): ";
-	// 			cin >> user_input;
-	// 			infile.open("input_files/" + user_input + ".txt");
-	// 			input_received = true;
-	// 		}
-	// 		catch (exception& j)
-	// 		{
-	// 			cout << "Error: check to make sure the input is in the input_files folder and try again." << endl;
-	// 			cout << j.what() << endl;
-	// 			input_received = false;
-	// 		}
-	// 		//cout << e.what() << "\n";
-	// 	}
-	// }
 
 	infile>>P>>L;
 	cout<<P<<" "<<L<<endl;
