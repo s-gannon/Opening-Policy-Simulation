@@ -83,8 +83,8 @@ int is_equal(int a, int b)
 
 int main(int argc, char* argv[])
 {
-    int prefs, locs, times, current_time;					//preferences, locations, and times
-    float max_infect_rate, removal_rate, mortality_rate;	//max. infection rate, removal rate, mortality rate
+    int prefs, locs, times, curr_time;					//preferences, locations, and times
+    float infect_rate, remov_rate, mort_rate;	//max. infection rate, removal rate, mortality rate
 
 	string input;			//input from the user
     ifstream infile;		//input data; will eventually be optional after random number implementation
@@ -123,24 +123,24 @@ int main(int argc, char* argv[])
 	}
 
 	// P L T lambda r mu
-    infile >> prefs >> locs >> times >> max_infect_rate >> removal_rate >> mortality_rate;
+    infile >> prefs >> locs >> times >> infect_rate >> remov_rate >> mort_rate;
 
 	//locs++;		//incremented in order to account for home (?)
 
 	cout << "Preferences: " << prefs;
 	cout << " | Locations: " << locs;
 	cout << " | Time Slots: " << times;
-	cout << " | Maximum Infection Rate: " << max_infect_rate;
-	cout << " | Removal Rate: " << removal_rate;
-	cout << " | Mortality Rate: " << mortality_rate << endl;
+	cout << " | Maximum Infection Rate: " << infect_rate;
+	cout << " | Removal Rate: " << remov_rate;
+	cout << " | Mortality Rate: " << mort_rate << endl;
 
     float ***susceptible = new float**[prefs];	//susceptible people of a pref. at a location and time
     float ***infected = new float**[prefs];		//infected people of a pref. at a location and time
     float *removed = new float[MAX_TIME];		//removed individuals at a specific time
     float *cur_viral_load = new float[locs + 1];	//current viral load at each location
     float *max_viral_load = new float[locs + 1];	//maximum viral load at each location
-    int **choice_ranking = new int*[prefs];		//choice ranking of locations
-    int **opening_policies = new int*[times];	//opening policies for each location
+    int **choice_rank = new int*[prefs];		//choice ranking of locations
+    int **open_policies = new int*[times];	//opening policies for each location
     int *time_segments = new int[times];		//the start and end times for each time slot
 
 	//creating all of the multidimensional arrays
@@ -156,11 +156,11 @@ int main(int argc, char* argv[])
     }
     for(int p = 0; p < prefs; p++)
     {
-        choice_ranking[p] = new int[locs];
+        choice_rank[p] = new int[locs];
     }
     for(int tm = 0; tm < times; tm++)
     {
-        opening_policies[tm] = new int[locs];
+        open_policies[tm] = new int[locs];
     }
 
 	for(int j = 0; j < locs; j++)
@@ -180,8 +180,8 @@ int main(int argc, char* argv[])
 	{
 		for(int j = 0; j < locs; j++)
 		{
-			infile >> choice_ranking[i][j];
-			cout << choice_ranking[i][j] << " ";
+			infile >> choice_rank[i][j];
+			cout << choice_rank[i][j] << " ";
 		}
 		cout << endl;
 	}
@@ -197,8 +197,8 @@ int main(int argc, char* argv[])
 	{
 		for(int j = 0; j < locs; j++)
 		{
-			infile >> opening_policies[i][j];
-			cout << opening_policies[i][j] << " ";
+			infile >> open_policies[i][j];
+			cout << open_policies[i][j] << " ";
 		}
 		cout << endl;
 	}
@@ -215,21 +215,25 @@ int main(int argc, char* argv[])
 	infile.close();
 	if(argc < 2)
 	{
-
+		outfile.open("output_data.txt");
 	}
-	outfile.open("output_data.txt");
+	else
+	{
+		string out_name = argv[2];
+		outfile.open(OUTPUT_FILE_PATH + out_name + ".txt");
+	}
 
-	current_time = 0;
-	recovered[0] = 0;
-	while(current_time < MAX_TIME)
+	curr_time = 0;
+	removed[0] = 0;
+	while(curr_time < MAX_TIME)
 	{
 		for(int j = 0; j < locs; j++)
 		{
-			current_viral_load[j] = 0;
+			cur_viral_load[j] = 0;
 		}
 		//death from disease
-		recovered[current_time + 1] = recovered[current_time] - mortality_rate * recovered[current_time];
-		current_time++;
+		removed[curr_time + 1] = removed[curr_time] - mort_rate * removed[curr_time];
+		curr_time++;
 	}
 
 	outfile.close();
