@@ -3,15 +3,15 @@
 #include <iostream>
 
 #define MAX_TIME 900
-#define INPUT_FILE_PATH "input/"
-#define OUTPUT_FILE_PATH "output/"
+#define INPUT_FILE_PATH "input_files/"
+#define OUTPUT_FILE_PATH "output_files/"
 
-using std::cout;
 using std::cin;
-using std::ifstream;
-using std::ofstream;
+using std::cout;
 using std::endl;
 using std::string;
+using std::ifstream;
+using std::ofstream;
 
 //rate of moving back home from the locations 1, 2, ..., L
 float rate_of_moving_back(int n)
